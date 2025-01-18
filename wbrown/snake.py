@@ -7,7 +7,7 @@ class TextAdventureGame:
         self.current_location = None
         self.is_playing = True
         self.score = 0
-        self.length = 5  # Maximum word length the player can eat
+        self.length = 1  # Maximum word length the player can eat
         self.hunger_letter = 'a'  # The letter the player is hungry for
 
     def add_location(self, name, description, options):
@@ -34,9 +34,8 @@ class TextAdventureGame:
     def display_location(self):
         """Display the current location's description and options."""
         location = self.locations[self.current_location]
-        print(f"\n{self.current_location}")
         print(location["description"])
-        print("\nOptions:")
+        print("\nOptions (not edible):")
         for index, option in enumerate(location["options"].keys(), start=1):
             print(f"{index}. {option}")
         print(f"\nScore: {self.score}")
@@ -54,27 +53,36 @@ class TextAdventureGame:
             if self.current_location == "END":
                 self.is_playing = False
                 print("\nThank you for playing!")
+            self.display_location()
         elif isinstance(choice, str):
             description_words = location["description"].split()
-            if choice in description_words and len(choice) <= self.length:
-                print(f"You eat the word: {choice}")
-                if self.hunger_letter in choice:
-                    points = len(choice)
-                    self.score += points
-                    print(f"The word contains '{self.hunger_letter}'. You gain {points} points!")
-                description_words.remove(choice)
-                location["description"] = " ".join(description_words)
-            elif choice in description_words:
-                print(f"The word '{choice}' is too long to eat.")
+            if choice not in description_words:
+                print(f"The word '{choice}' is not present in the description.  Please try again.")
+                return
+            if len(choice) > self.length:
+                print(f"The word '{choice}' is " + str(len(choice)) + " long and you can only eat words of length " + str(self.length) + " or smaller.  Please try again.")
+                return
+            print(f"You eat the word: {choice}")
+            if self.hunger_letter in choice:
+                points = choice.count(self.hunger_letter)
+                self.score += points
+                print(f"The word contains '{self.hunger_letter}'. You gain {points} points!")
             else:
-                print("Invalid word. Please try again.")
+                print(f"The word does not contain '{self.hunger_letter}'")
+            if len(choice) == self.length:
+                self.length += 1
+                print(f"The word is long enough to increase your length, you can eat bigger words!")
+            self.display_location()
+            description_words.remove(choice)
+            location["description"] = " ".join(description_words)
+            self.display_location()
         else:
             print("Invalid choice. Please try again.")
 
     def start(self):
         """Start the game loop."""
+        self.display_location()
         while self.is_playing:
-            self.display_location()
             try:
                 user_input = input("\nEnter your choice: ")
                 if user_input.isdigit():
