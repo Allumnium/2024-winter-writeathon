@@ -20,7 +20,7 @@ class TextAdventureGame:
         options (dict): Actions available in the location. Keys are action names, values are result locations.
         """
         self.locations[name] = {
-            "description": description,
+            "description": description.lower(),
             "options": options
         }
 
@@ -33,8 +33,11 @@ class TextAdventureGame:
 
     def display_location(self):
         """Display the current location's description and options."""
+        import time
         location = self.locations[self.current_location]
+        print()
         print(location["description"])
+        time.sleep(1)
         print("\nOptions (not edible):")
         for index, option in enumerate(location["options"].keys(), start=1):
             print(f"{index}. {option}")
@@ -97,6 +100,32 @@ class TextAdventureGame:
 if __name__ == "__main__":
     game = TextAdventureGame()
 
+
+    game.add_location(
+        "tutorial1",
+        "you have a pet snake named lenny",
+        {"Continue intro (type an option's number to pick it)": "tutorial2", "Skip intro": "Forest Entrance"}
+    )
+
+    game.add_location(
+        "tutorial2",
+        "Lenny likes to eat",
+        {"...": "tutorial3"}
+    )
+
+    game.add_location(
+        "tutorial3",
+        "Lenny likes tasty words",
+        {"...": "tutorial4"}
+    )
+
+
+    game.add_location(
+        "tutorial3",
+        "Try to type a word to eat it",
+        {"...": "tutorial4"}
+    )
+
     # Define locations
     game.add_location(
         "Forest Entrance",
@@ -123,7 +152,7 @@ if __name__ == "__main__":
     )
 
     # Set starting location
-    game.set_starting_location("Forest Entrance")
+    game.set_starting_location("tutorial1")
 
     # Start the game
     game.start()
