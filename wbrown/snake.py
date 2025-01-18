@@ -34,9 +34,8 @@ class TextAdventureGame:
     def display_location(self):
         """Display the current location's description and options."""
         location = self.locations[self.current_location]
-        print(f"\n{self.current_location}")
         print(location["description"])
-        print("\nOptions:")
+        print("\nOptions (not edible):")
         for index, option in enumerate(location["options"].keys(), start=1):
             print(f"{index}. {option}")
         print(f"\nScore: {self.score}")
