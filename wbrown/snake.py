@@ -7,7 +7,7 @@ class TextAdventureGame:
         self.current_location = None
         self.is_playing = True
         self.score = 0
-        self.length = 5  # Maximum word length the player can eat
+        self.length = 1  # Maximum word length the player can eat
         self.hunger_letter = 'a'  # The letter the player is hungry for
 
     def add_location(self, name, description, options):
@@ -59,13 +59,16 @@ class TextAdventureGame:
             if choice in description_words and len(choice) <= self.length:
                 print(f"You eat the word: {choice}")
                 if self.hunger_letter in choice:
-                    points = len(choice)
+                    points = choice.count(self.hunger_letter)
                     self.score += points
-                    print(f"The word contains '{self.hunger_letter}'. You gain {points} points!")
+                    self.length += 1
+                    print(f"The word contains '{self.hunger_letter}'. You gain {points} points! Your length increases!")
+                else:
+                    print(f"The word does not contain '{self.hunger_letter}'")
                 description_words.remove(choice)
                 location["description"] = " ".join(description_words)
             elif choice in description_words:
-                print(f"The word '{choice}' is too long to eat.")
+                print(f"The word '{choice}' is too long to eat.  Please try again.")
             else:
                 print("Invalid word. Please try again.")
         else:
