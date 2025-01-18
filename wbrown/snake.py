@@ -54,6 +54,7 @@ class TextAdventureGame:
             if self.current_location == "END":
                 self.is_playing = False
                 print("\nThank you for playing!")
+            self.display_location()
         elif isinstance(choice, str):
             description_words = location["description"].split()
             if choice in description_words and len(choice) <= self.length:
@@ -65,8 +66,10 @@ class TextAdventureGame:
                     print(f"The word contains '{self.hunger_letter}'. You gain {points} points! Your length increases!")
                 else:
                     print(f"The word does not contain '{self.hunger_letter}'")
+                self.display_location()
                 description_words.remove(choice)
                 location["description"] = " ".join(description_words)
+                self.display_location()
             elif choice in description_words:
                 print(f"The word '{choice}' is too long to eat.  Please try again.")
             else:
@@ -76,8 +79,8 @@ class TextAdventureGame:
 
     def start(self):
         """Start the game loop."""
+        self.display_location()
         while self.is_playing:
-            self.display_location()
             try:
                 user_input = input("\nEnter your choice: ")
                 if user_input.isdigit():
