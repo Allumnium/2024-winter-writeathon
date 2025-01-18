@@ -57,23 +57,26 @@ class TextAdventureGame:
             self.display_location()
         elif isinstance(choice, str):
             description_words = location["description"].split()
-            if choice in description_words and len(choice) <= self.length:
-                print(f"You eat the word: {choice}")
-                if self.hunger_letter in choice:
-                    points = choice.count(self.hunger_letter)
-                    self.score += points
-                    self.length += 1
-                    print(f"The word contains '{self.hunger_letter}'. You gain {points} points! Your length increases!")
-                else:
-                    print(f"The word does not contain '{self.hunger_letter}'")
-                self.display_location()
-                description_words.remove(choice)
-                location["description"] = " ".join(description_words)
-                self.display_location()
-            elif choice in description_words:
-                print(f"The word '{choice}' is too long to eat.  Please try again.")
+            if choice not in description_words:
+                print(f"The word '{choice}' is not present in the description.  Please try again.")
+                return
+            if len(choice) > self.length:
+                print(f"The word '{choice}' is " + str(len(choice)) + " long and you can only eat words of length " + str(self.length) + " or smaller.  Please try again.")
+                return
+            print(f"You eat the word: {choice}")
+            if self.hunger_letter in choice:
+                points = choice.count(self.hunger_letter)
+                self.score += points
+                print(f"The word contains '{self.hunger_letter}'. You gain {points} points!")
             else:
-                print("Invalid word. Please try again.")
+                print(f"The word does not contain '{self.hunger_letter}'")
+            if len(choice) == self.length:
+                self.length += 1
+                print(f"The word is long enough to increase your length, you can eat bigger words!")
+            self.display_location()
+            description_words.remove(choice)
+            location["description"] = " ".join(description_words)
+            self.display_location()
         else:
             print("Invalid choice. Please try again.")
 
